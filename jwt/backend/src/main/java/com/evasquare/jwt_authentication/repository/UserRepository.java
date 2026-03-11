@@ -8,7 +8,11 @@ import org.springframework.stereotype.Repository;
 import com.evasquare.jwt_authentication.entity.User;
 
 @Repository
-public interface UserRepository extends  JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
+
     Optional<User> findByEmail(String email);
+
     boolean existsByEmail(String email);
+
+    void deleteByEmail(String email);
 }

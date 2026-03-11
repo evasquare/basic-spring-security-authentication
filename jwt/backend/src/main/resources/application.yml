@@ -1,6 +1,8 @@
 spring:
   application:
     name: jwt-authentication
+  config:
+    import: classpath:application-secret.yml
 
   datasource:
     url: jdbc:h2:file:./data/database
@@ -26,6 +28,7 @@ jwt:
   secret: mySecretKey123456789012345678901234567890
   expiration: 86400000
   refresh-expiration: 604800000
+  admin-password: ${jwt.admin-password}
 
 logging:
   level:
