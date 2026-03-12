@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.evasquare.jwt_authentication.entity.User;
@@ -17,7 +18,8 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
@@ -29,7 +31,7 @@ public class UserService implements UserDetailsService {
 
         if (adminOptional.isPresent()) {
             User user = adminOptional.get();
-            user.setPassword(newPassword);
+            user.setPassword(passwordEncoder.encode(newPassword));
 
             userRepository.save(user);
         }

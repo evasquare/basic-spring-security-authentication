@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,37 +14,25 @@ import com.evasquare.jwt_authentication.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/auth/admin")
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
 
     private final UserRepository userRepository;
 
     @GetMapping("/users")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Map<String, Object>>> getAllUsers() {
         List<User> users = userRepository.findAll();
 
         List<Map<String, Object>> userDtos = users.stream()
                 .map(user -> Map.<String, Object>of(
-                        "id", user.getId(),
-                        "email", user.getUsername(),
-                        "roles", user.getRoles(),
-                        "enabled", user.isEnabled()
-                ))
+                "id", user.getId(),
+                "email", user.getUsername(),
+                "roles", user.getRoles(),
+                "enabled", user.isEnabled()
+        ))
                 .toList();
 
         return ResponseEntity.ok(userDtos);
-    }
-
-    @GetMapping("/dashboard")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Map<String, Object>> getAdminDashboard() {
-        long totalUsers = userRepository.count();
-
-        return ResponseEntity.ok(Map.of(
-                "totalUsers", totalUsers,
-                "message", "This is an admin-only endpoint"
-        ));
     }
 }
